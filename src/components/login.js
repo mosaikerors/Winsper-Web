@@ -46,42 +46,40 @@ class NormalLoginForm extends React.Component {
     return (
         !login
           ?
-            <div>
-              <Form onSubmit={this.handleSubmit} style={{backgroundColor:"#ffffff", padding:"30px 30px"}}>
-                <p style={{font:"25px bold"}}>{"Winsper后台管理系统"}</p>
-                <Form.Item>
-                  {getFieldDecorator('phone', {
-                    rules: [{ required: true, message: '请输入手机号!' }],
-                  })(
-                    <Input
-                      prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                      placeholder="手机号"
-                    />,
-                  )}
-                </Form.Item>
-                <Form.Item>
-                  {getFieldDecorator('password', {
-                    rules: [{ required: true, message: '请输入密码!' }],
-                  })(
-                    <Input
-                      prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                      type="password"
-                      placeholder="密码"
-                    />,
-                  )}
-                </Form.Item>
-                <Form.Item>
-                  {getFieldDecorator('remember', {
-                    valuePropName: 'checked',
-                    initialValue: true,
-                  })(<Checkbox>记住</Checkbox>)}
-                  <p style={{float:"right"}}>忘记密码</p>
-                  <Button type="primary" htmlType="submit" style={{width:"100%"}}>
-                    登录
-                  </Button>
-                </Form.Item>
-              </Form>
-            </div>
+            <Form onSubmit={this.handleSubmit} style={{backgroundColor:"#ffffff", padding:"30px 30px"}}>
+              <p style={{font:"25px bold"}}>{"Winsper后台管理系统"}</p>
+              <Form.Item>
+                {getFieldDecorator('phone', {
+                  rules: [{ required: true, message: '请输入手机号!' }],
+                })(
+                  <Input
+                    prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="手机号"
+                  />,
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('password', {
+                  rules: [{ required: true, message: '请输入密码!' }],
+                })(
+                  <Input
+                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    type="password"
+                    placeholder="密码"
+                  />,
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('remember', {
+                  valuePropName: 'checked',
+                  initialValue: true,
+                })(<Checkbox>记住</Checkbox>)}
+                <p style={{float:"right"}}>忘记密码</p>
+                <Button type="primary" htmlType="submit" style={{width:"100%"}}>
+                  登录
+                </Button>
+              </Form.Item>
+            </Form>
             :
       <Redirect to={"/admin"}/>
     );
