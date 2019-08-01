@@ -13,8 +13,7 @@ class RegisterChart extends React.Component{
     let storage = window.localStorage;
     let token = storage.getItem("token");
     let uId = storage.getItem("uId");
-    console.log(token, uId);
-    requests.get("/api/admin/post-statictics")
+    requests.get("/api/admin/register-statictics")
       .set({uId:uId})
       .set({Authorization: "Bearer "+token})
       .then(res=>JSON.parse(res.text))

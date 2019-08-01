@@ -12,7 +12,7 @@ class Recharts extends React.Component {
       <React.Fragment>
         <Row style={{width:"100%"}}>
           <Col>
-            <Card title="用户注册统计图" bordered={true} style={{marginTop:"100px"}}>
+            <Card title="用户注册统计图" bordered={true}>
               <RegisterChart />
             </Card>
           </Col>

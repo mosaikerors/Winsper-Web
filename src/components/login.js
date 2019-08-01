@@ -2,7 +2,16 @@ import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import React from 'react';
 import 'antd/dist/antd.css';
 import requests from 'superagent';
+import {Redirect} from "react-router";
 class NormalLoginForm extends React.Component {
+  
+  constructor(props){
+      super(props);
+      this.state={
+          login: false
+      }
+  }
+  
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -15,6 +24,9 @@ class NormalLoginForm extends React.Component {
             let storage = window.localStorage;
             storage["token"] = res["token"];
             storage["uId"] = res["uId"];
+            this.setState({
+                login: true
+            })
           })
           .catch(err=>{
             console.log(err)
@@ -25,7 +37,10 @@ class NormalLoginForm extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const {login} = this.state;
     return (
+        !login
+          ?
       <Form onSubmit={this.handleSubmit} style={{backgroundColor:"#ffffff", padding:"30px 30px"}}>
         <p style={{font:"25px bold"}}>{"Winsper后台管理系统"}</p>
         <Form.Item>
@@ -60,8 +75,11 @@ class NormalLoginForm extends React.Component {
           </Button>
         </Form.Item>
       </Form>
+            :
+      <Redirect to={"/admin"}/>
     );
   }
+  
 }
 
 export default Form.create({ name: 'normal_login' })(NormalLoginForm);

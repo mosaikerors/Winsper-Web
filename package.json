@@ -5,8 +5,11 @@
   "dependencies": {
     "antd": "^3.20.7",
     "http-proxy-middleware": "^0.19.1",
+    "query-string": "^6.8.2",
     "react": "^16.8.6",
+    "react-document-title": "^2.0.3",
     "react-dom": "^16.8.6",
+    "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "recharts": "^1.6.2",

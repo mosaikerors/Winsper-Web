@@ -34,7 +34,7 @@ const columns = [
   }
 ];
 
-class App extends React.Component {
+export default class AdminUser extends React.Component {
   constructor(props){
     super(props);
     this.state={
@@ -171,4 +171,3 @@ class App extends React.Component {
   }
 
 }
-export default App;
