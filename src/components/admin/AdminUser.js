@@ -22,15 +22,21 @@ const columns = [
   },
   {
     title:"羽毛数",
-    dataIndex:"features"
+    dataIndex:"features",
+    sorter: (a, b) => Number(a["features"]) - Number(b["features"]),
+    sortDirections: ['descend', 'ascend']
   },
   {
     title:"粉丝数",
-    dataIndex:"followers"
+    dataIndex:"followers",
+    sorter: (a, b) => Number(a["followers"]) - Number(b["followers"]),
+    sortDirections: ['descend', 'ascend']
   },
   {
     title:"关注数",
-    dataIndex:"following"
+    dataIndex:"following",
+    sorter: (a, b) => Number(a["following"]) - Number(b["following"]),
+    sortDirections: ['descend', 'ascend']
   }
 ];
 

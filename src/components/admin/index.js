@@ -3,9 +3,7 @@ import { Card } from 'antd';
 import 'antd/dist/antd.css'
 import AdminUser from './AdminUser';
 import AdminHean from './AdminHean';
-import AdminPost from './AdminUser';
-import AdminDiary from './AdminUser';
-import AdminJournel from './AdminUser';
+import AdminJournel from './AdminJournel';
 
 const tab = [
     {
@@ -34,8 +32,8 @@ const content = {
     user: <AdminUser />,
     hean: <AdminHean />,
     journel: <AdminJournel />,
-    post: <AdminPost />,
-    diary: <AdminDiary />
+    post: <div>待开发</div>,
+    diary: <div>待开发</div>
 };
 
 export default class TabsCard extends React.Component {
