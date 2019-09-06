@@ -9,24 +9,24 @@ const columns = [
     dataIndex: 'uId',
   },
   {
-    title: '手机号码',
-    dataIndex: 'phone',
-  },
-  {
-    title: '用户名',
-    dataIndex: 'username',
-  },
-  {
-    title:"是否可用",
-    dataIndex:"status",
-    render: (value)=>(value<=0 ? <Icon type="close" /> : <Icon type="check" />)
-  },
-  {
-    title:"注册时间",
-    dataIndex:"firstin",
+    title: '投稿时间',
+    dataIndex: 'date',
     render: (value)=>{
       const dateObj = new Date(value);
       return <span>{dateObj.toISOString()}</span>
+    }
+  },
+  {
+    title: '投稿原因',
+    dataIndex: 'reason',
+  },
+  {
+    title:"投稿状态",
+    dataIndex:"status",
+    render: (value)=>{
+      if(value===0) return <Icon type="question" />;
+      if(value===1) return <Icon type="close" />;
+      if(value===2) return <Icon type="check" />;
     }
   }
   // {
@@ -49,7 +49,7 @@ const columns = [
   // }
 ];
 
-export default class AdminUser extends React.Component {
+export default class AdminSubmission extends React.Component {
   constructor(props){
     super(props);
     this.state={
@@ -67,7 +67,7 @@ export default class AdminUser extends React.Component {
         let selectedItems = [];
         for(let p in selectedRows){
           if(selectedRows.hasOwnProperty(p)){
-            selectedItems.push(selectedRows[p].uId)
+            selectedItems.push(selectedRows[p].cId)
           }
         }
         this.setState({
@@ -82,7 +82,7 @@ export default class AdminUser extends React.Component {
     let {data} = this.state;
     for(let p in data){
       if(data.hasOwnProperty(p)){
-        if(data[p].uId===value||data[p].username.indexOf(value)>=0||data[p].phone.indexOf(value)>=0){
+        if(data[p].uId===value){
           tableData.push(data[p])
         }
       }
@@ -96,14 +96,14 @@ export default class AdminUser extends React.Component {
     let {data, tableData, selectedItems} = this.state;
     for(let p in tableData){
       if(tableData.hasOwnProperty(p)){
-        if(selectedItems.indexOf(tableData[p].uId)!==-1){
+        if(selectedItems.indexOf(tableData[p].cId)!==-1){
           tableData[p].status = status;
         }
       }
     }
     for(let p in data){
       if(data.hasOwnProperty(p)){
-        if(selectedItems.indexOf(tableData[p].uId)!==-1){
+        if(selectedItems.indexOf(tableData[p].cId)!==-1){
           tableData[p].status = status;
         }
       }
@@ -116,15 +116,15 @@ export default class AdminUser extends React.Component {
   disable(){
     let storage = window.localStorage;
     let {selectedItems} = this.state;
-    requests.put("/api/admin/disable")
+    requests.put("/api/admin/check")
       .set("uId",storage.uId)
       .set("Authorization","Bearer "+storage.token)
-      .send({"user":selectedItems})
+      .send({"cId":selectedItems, "status":1})
       .then(res=>JSON.parse(res.text))
       .then(res=>{
         if(res["rescode"]===0){
-          this.changeState(0);
-          alert("成功禁用"+ selectedItems);
+          this.changeState(1);
+          alert("不通过"+ selectedItems);
         }
       })
   }
@@ -132,31 +132,30 @@ export default class AdminUser extends React.Component {
   enable(){
     let storage = window.localStorage;
     let {selectedItems} = this.state;
-    requests.put("/api/admin/enable")
+    requests.put("/api/admin/check")
       .set({"uId":storage.uId})
       .set({"Authorization":"Bearer "+storage.token})
-      .send({"user":selectedItems})
+      .send({"cId":selectedItems, "status":2})
       .then(res=>JSON.parse(res.text))
       .then(res=>{
         if(res["rescode"]===0){
-          this.changeState(1);
-          alert("解禁成功！"+selectedItems);
+          this.changeState(2);
+          alert("通过"+selectedItems);
         }
       })
   }
 
   componentWillMount() {
     let storage = window.localStorage;
-    requests.get("/api/admin/getAllUser")
+    requests.get("/api/admin/getAllSubmission")
       .set({"uId":storage.uId})
       .set({"Authorization":"Bearer "+storage.token})
       .then(res=>JSON.parse(res.text))
       .then(res=>{
         if(res["rescode"]===0){
-          console.log(res["data"])
           for(let p in res["data"]){
             if(res["data"].hasOwnProperty(p)){
-              res["data"][p].key = res["data"][p].uId;
+              res["data"][p].key = res["data"][p].hId;
             }
           }
           this.setState({
@@ -172,7 +171,7 @@ export default class AdminUser extends React.Component {
       <div>
         <div>
           <Search
-            placeholder="输入用户名、手机号、User ID搜索"
+            placeholder="输入User ID搜索"
             onSearch={this.handleSearch}
             enterButton
             style={{margin:"10px auto"}}
@@ -180,8 +179,8 @@ export default class AdminUser extends React.Component {
         </div>
         <Table rowSelection={this.rowSelection} columns={columns} dataSource={this.state.tableData} />
         <div style={{marginLeft:"40%", marginTop:"20px"}}>
-          <Button type={"primary"} style={{marginRight:"20px"}} onClick={this.disable}>禁用用户</Button>
-          <Button type={"primary"} onClick={this.enable}>解禁用户</Button>
+          <Button type={"primary"} style={{marginRight:"20px"}} onClick={this.enable}>通过</Button>
+          <Button type={"primary"} onClick={this.disable}>不通过</Button>
         </div>
       </div>)
   }

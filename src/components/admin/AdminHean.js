@@ -11,6 +11,10 @@ const columns = [
     {
         title: '创建时间',
         dataIndex: 'createdTime',
+        render: (value)=>{
+            const dateObj = new Date(value);
+            return <span>{dateObj.toISOString()}</span>
+          }
     },
     {
         title: '内容',
@@ -36,7 +40,7 @@ const columns = [
     }
 ];
 
-export default class AdminUser extends React.Component {
+export default class AdminHean extends React.Component {
     constructor(props){
         super(props);
         this.state={
@@ -65,8 +69,8 @@ export default class AdminUser extends React.Component {
     componentWillMount() {
         let storage = window.localStorage;
         requests.get("/api/admin/getAllHean")
-            .set({"uId":storage.getItem("uId")})
-            .set({"Authorization":"Bearer "+storage.getItem("Authorization")})
+            .set({"uId":storage.uId})
+            .set({"Authorization":"Bearer "+storage.token})
             .then(res=>JSON.parse(res.text))
             .then(res=>{
                 if(res["rescode"]===0){

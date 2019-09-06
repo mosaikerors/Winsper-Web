@@ -16,14 +16,16 @@ class NormalLoginForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        requests.post("/api/admin/login")
+        requests.post("/api/user/login")
           .send({"phone": values.phone,"password":values.password})
           .then(res=>JSON.parse(res.text))
           .then(res=>{
-            if(res["rescode"]===0){
+            if(res["rescode"]===0 && res["status"]===100){
               let storage = window.localStorage;
               storage["token"] = res["token"];
               storage["uId"] = res["uId"];
+              storage["phone"] = values.phone;
+              storage["username"] = res["username"];
               this.setState({
                 login: true
               })
@@ -74,7 +76,6 @@ class NormalLoginForm extends React.Component {
                   valuePropName: 'checked',
                   initialValue: true,
                 })(<Checkbox>记住</Checkbox>)}
-                <p style={{float:"right"}}>忘记密码</p>
                 <Button type="primary" htmlType="submit" style={{width:"100%"}}>
                   登录
                 </Button>
