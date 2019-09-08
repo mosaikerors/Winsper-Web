@@ -3,7 +3,6 @@ import { Card } from 'antd';
 import 'antd/dist/antd.css'
 import AdminUser from './AdminUser';
 import AdminHean from './AdminHean';
-import AdminJournel from './AdminJournel';
 import AdminSubmission from './AdminSubmission'
 
 const tab = [
@@ -16,10 +15,6 @@ const tab = [
         tab: '函管理',
     },
     {
-        key: 'journel',
-        tab: '手账管理',
-    },
-    {
         key: 'post',
         tab: '投稿管理',
     }
@@ -28,7 +23,6 @@ const tab = [
 const content = {
     user: <AdminUser />,
     hean: <AdminHean />,
-    journel: <AdminJournel />,
     post: <AdminSubmission />,
 };
 

@@ -3,6 +3,8 @@ import React from 'react';
 import 'antd/dist/antd.css';
 import requests from 'superagent';
 import {Redirect} from "react-router";
+import ws from "../ws"
+
 class NormalLoginForm extends React.Component {
   
   constructor(props){
@@ -18,7 +20,7 @@ class NormalLoginForm extends React.Component {
       if (!err) {
         requests.post("/api/user/login")
           .send({"phone": values.phone,"password":values.password})
-          .then(res=>JSON.parse(res.text))
+          .then(res=>res.body)
           .then(res=>{
             if(res["rescode"]===0 && res["status"]===100){
               let storage = window.localStorage;
@@ -28,7 +30,13 @@ class NormalLoginForm extends React.Component {
               storage["username"] = res["username"];
               this.setState({
                 login: true
-              })
+              });
+              /*ws = new WebSocket(\`ws://202.120.40.8:30525/websocket?senderUId=${res.uId}\`);
+              ws.onopen = () => console.log("open");
+              ws.onmessage = (e) => console.log(e);
+              ws.onclose = () => console.log("close");
+              ws.send(\`{"type": 5, "receiverUId":1000, "d": "123"}`);
+              window.localStorage["ws"] = ws*/
             }
             else{
               alert("手机号或者密码错误！")

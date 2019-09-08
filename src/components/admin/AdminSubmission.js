@@ -1,7 +1,9 @@
 import {Button, Table,Input, Icon} from 'antd';
 import React from 'react';
 import requests from 'superagent';
-import 'antd/dist/antd.css'
+import 'antd/dist/antd.css';
+import ws from "../../ws"
+
 const Search = Input.Search;
 const columns = [
   {
@@ -25,28 +27,10 @@ const columns = [
     dataIndex:"status",
     render: (value)=>{
       if(value===0) return <Icon type="question" />;
-      if(value===1) return <Icon type="close" />;
-      if(value===2) return <Icon type="check" />;
+      if(value===2) return <Icon type="close" />;
+      if(value===1) return <Icon type="check" />;
     }
   }
-  // {
-  //   title:"羽毛数",
-  //   dataIndex:"features",
-  //   sorter: (a, b) => Number(a["features"]) - Number(b["features"]),
-  //   sortDirections: ['descend', 'ascend']
-  // },
-  // {
-  //   title:"粉丝数",
-  //   dataIndex:"followers",
-  //   sorter: (a, b) => Number(a["followers"]) - Number(b["followers"]),
-  //   sortDirections: ['descend', 'ascend']
-  // },
-  // {
-  //   title:"关注数",
-  //   dataIndex:"following",
-  //   sorter: (a, b) => Number(a["following"]) - Number(b["following"]),
-  //   sortDirections: ['descend', 'ascend']
-  // }
 ];
 
 export default class AdminSubmission extends React.Component {
@@ -55,7 +39,8 @@ export default class AdminSubmission extends React.Component {
     this.state={
       data:[],
       tableData:[],
-      selectedItems:[]
+      selectedItems:[],
+      selectedRows:[]
     };
     this.handleSearch = this.handleSearch.bind(this);
     this.disable = this.disable.bind(this);
@@ -71,7 +56,8 @@ export default class AdminSubmission extends React.Component {
           }
         }
         this.setState({
-          selectedItems
+          selectedItems,
+          selectedRows
         });
       }
     };
@@ -119,11 +105,11 @@ export default class AdminSubmission extends React.Component {
     requests.put("/api/admin/check")
       .set("uId",storage.uId)
       .set("Authorization","Bearer "+storage.token)
-      .send({"cId":selectedItems, "status":1})
+      .send({"cIds":selectedItems, "status":2})
       .then(res=>JSON.parse(res.text))
       .then(res=>{
         if(res["rescode"]===0){
-          this.changeState(1);
+          this.changeState(2);
           alert("不通过"+ selectedItems);
         }
       })
@@ -131,15 +117,26 @@ export default class AdminSubmission extends React.Component {
 
   enable(){
     let storage = window.localStorage;
-    let {selectedItems} = this.state;
+    let {selectedItems, selectedRows} = this.state;
+    console.log(selectedItems, selectedRows);
     requests.put("/api/admin/check")
       .set({"uId":storage.uId})
       .set({"Authorization":"Bearer "+storage.token})
-      .send({"cId":selectedItems, "status":2})
+      .send({"cIds":selectedItems, "status":1})
       .then(res=>JSON.parse(res.text))
       .then(res=>{
         if(res["rescode"]===0){
-          this.changeState(2);
+          this.changeState(1);
+          for(let p in selectedRows){
+            if(selectedRows.hasOwnProperty(p)){
+              let targetUId = selectedRows[p]["uId"];
+              let sendUId = window.localStorage["uId"];
+              let type = 5;
+              let hId = selectedRows[p]["hId"];
+              console.log(targetUId,sendUId,type,hId);
+              ws.send(`{"type": 5, "receiverUId": ${targetUId}, "hId": "${hId}"}`);
+            }
+          }
           alert("通过"+selectedItems);
         }
       })
@@ -155,7 +152,7 @@ export default class AdminSubmission extends React.Component {
         if(res["rescode"]===0){
           for(let p in res["data"]){
             if(res["data"].hasOwnProperty(p)){
-              res["data"][p].key = res["data"][p].hId;
+              res["data"][p].key = res["data"][p].cId;
             }
           }
           this.setState({
@@ -184,5 +181,4 @@ export default class AdminSubmission extends React.Component {
         </div>
       </div>)
   }
-
 }

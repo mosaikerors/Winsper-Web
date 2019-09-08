@@ -29,24 +29,6 @@ const columns = [
       return <span>{dateObj.toISOString()}</span>
     }
   }
-  // {
-  //   title:"羽毛数",
-  //   dataIndex:"features",
-  //   sorter: (a, b) => Number(a["features"]) - Number(b["features"]),
-  //   sortDirections: ['descend', 'ascend']
-  // },
-  // {
-  //   title:"粉丝数",
-  //   dataIndex:"followers",
-  //   sorter: (a, b) => Number(a["followers"]) - Number(b["followers"]),
-  //   sortDirections: ['descend', 'ascend']
-  // },
-  // {
-  //   title:"关注数",
-  //   dataIndex:"following",
-  //   sorter: (a, b) => Number(a["following"]) - Number(b["following"]),
-  //   sortDirections: ['descend', 'ascend']
-  // }
 ];
 
 export default class AdminUser extends React.Component {
@@ -153,7 +135,6 @@ export default class AdminUser extends React.Component {
       .then(res=>JSON.parse(res.text))
       .then(res=>{
         if(res["rescode"]===0){
-          console.log(res["data"])
           for(let p in res["data"]){
             if(res["data"].hasOwnProperty(p)){
               res["data"][p].key = res["data"][p].uId;
